@@ -1,0 +1,6 @@
+
+9.13.15
+    (3.4 Recognizing audio)
+    - Need to get audio buffer
+    - web example in audioRecorder.js but look for node package
+    - get word recognition working in console

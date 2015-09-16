@@ -1,0 +1,23 @@
+{
+  "name": "sonus",
+  "version": "1.0.0",
+  "description": "Voice Command Node Module",
+  "main": "sonus.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/champagneSeth/VoCoNoMo.git"
+  },
+  "author": "Team Sonus",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/champagneSeth/VoCoNoMo/issues"
+  },
+  "homepage": "https://github.com/champagneSeth/VoCoNoMo#readme",
+  "dependencies": {
+    "cmusphinxdict": "0.0.5",
+    "node-record-lpcm16": "^0.1.4"
+  }
+}
