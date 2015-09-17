@@ -21,7 +21,7 @@ function sonus() {
             console.log('Go!');
             record('wav/woo', 3);
             setTimeout(function () {
-                // recognizeWav('wav/woo');
+                recognizeWav('wav/woo');
             }, 5000)
         }
     }
@@ -31,6 +31,7 @@ function sonus() {
     cmud.get('it', addWordToList);
 
     loadWords();
+    addGrammar();
     pronunciation = recognizer.lookupWord("HELLO");
     console.log(pronunciation);
 
@@ -79,6 +80,25 @@ function loadWords() {
     words.delete()
 }
 
+function addGrammar() {
+    var ids = new PS.Integers();
+    var transitions = new PS.VectorTransitions();
+    var grammar = {
+        start: 0,
+        end: 0,
+        numStates: 1,
+    };
+
+    transitions.push_back({from: 0, to: 0, logp: 0, word: ""});
+    transitions.push_back({from: 0, to: 0, logp: 0, word: "WE"});
+    transitions.push_back({from: 0, to: 0, logp: 0, word: "MADE"});
+    transitions.push_back({from: 0, to: 0, logp: 0, word: "IT"});
+
+    grammar.transitions = transitions;
+    recognizer.addGrammar(ids, grammar);
+    ids.delete();
+}
+
 function recognizeWav(fileName) {
     var buffer  = new PS.AudioBuffer()
     ,   audio   = fs.createReadStream(fileName + '.wav')
@@ -87,9 +107,9 @@ function recognizeWav(fileName) {
     ;
 
     audio.on('data', function (chunk) {
-        buffer.push_back(chunk);
-        // for (var i = 0 ; i < array.length ; i++)
-        //     buffer.push_back(array[i]); // Feed the array with audio data
+        for (var i = 0; i < chunk.length; i += 1) {
+            buffer.push_back(chunk.readUInt8(i));
+        }
     }).on('end', function () {
         output = recognizer.start();
         output = recognizer.process(buffer);
