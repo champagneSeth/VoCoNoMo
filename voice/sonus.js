@@ -59,6 +59,7 @@ function addWordToList(word, pronouncings) {
         if (i > 0) {
             wordHolder += '(' + (i+1) + ')';
         }
+	console.log([wordHolder, item])
         wordList.push([wordHolder, item]);
     });
 }

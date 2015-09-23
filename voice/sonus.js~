@@ -33,9 +33,9 @@ function sonus() {
     loadWords();
     addGrammar();
     pronunciation = recognizer.lookupWord("HELLO");
-    console.log(pronunciation);
+    //console.log(pronunciation);
 
-    console.log('we made it');
+    //console.log('we made it');
     console.log('\n\nRecording in...');
     countDown();
 }

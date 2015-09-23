@@ -53,4 +53,5 @@ module.exports =    [
 ,   ["A",               "AH"                            ]
 ,   ["A(2)",            "EY"                            ]
 ,   ["DICK",            "D IH K"                        ]
-];module.exports += [['this', 'that']];
+];
+module.exports.push(['thas', 'TH AS']);

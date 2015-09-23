@@ -21,11 +21,12 @@ stdin.addListener("data", function(d) {
 			if(d.toString().trim()){
 				word = d.toString().trim();
 				word = word.split("|");
-				adder = "module.exports += [['" + word[0] + "', '" + word[1] + "']];";
+				adder = "module.exports += ['" + word[0] + "', '" + word[1] + "'];";
 				console.log(adder);
 				var path = "wordList.js";
 				fs.appendFile("wordList.js", adder, function(err){
 				});
+				
 			}
 		});
 	
