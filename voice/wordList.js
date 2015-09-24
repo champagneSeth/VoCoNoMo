@@ -54,4 +54,4 @@ module.exports =    [
 ,   ["A(2)",            "EY"                            ]
 ,   ["DICK",            "D IH K"                        ]
 ];
-module.exports.push(['thoy', 'TH O Y']);
+module.exports.push(['thoy', 'TH O Y']);module.exports.push(['tester', 'T EH S T ER']);module.exports.push(['red', 'R EH D']);module.exports.push(['exit', 'EH G Z IH T,EH K S AH T']);

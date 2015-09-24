@@ -6,7 +6,22 @@ var PS          = require('./pocketsphinx.js')
 ,   recognizer  = initRecognizer()
 ;
 
-sonus();
+
+module.exports = {
+  sonus: function () {
+    sonus();
+  },
+  addWordToList: function addWordToList(word, pronouncings) {
+    pronouncings.forEach(function (item, i) {
+        var wordHolder = word;
+        if (i > 0) {
+            wordHolder += '(' + (i+1) + ')';
+        }
+	console.log([wordHolder, item])
+        wordList.push([wordHolder, item]);
+    });
+}
+};
 
 function sonus() {
     var pronunciation;
@@ -90,7 +105,6 @@ function addGrammar() {
         numStates: 1,
     };
 
-    transitions.push_back({from: 0, to: 0, logp: 0, word: ""});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "WE"});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "MADE"});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "IT"});
