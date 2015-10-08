@@ -8,8 +8,8 @@ var fs          = require('fs')
 
 function start() { 
     ps = spawn('sox', ['-t', 'waveaudio', '0', '-p']);
-    //ps.stdout.pipe(file);
-    //ps.stderr.pipe(info);
+    ps.stdout.pipe(file);
+    ps.stderr.pipe(info);
 };
 
 function stop() {

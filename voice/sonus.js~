@@ -9,7 +9,6 @@ var PS          = require('./pocketsphinx.js')
 
 module.exports = {
   sonus: function () {
-	concole.log("here");
     sonus();
   },
   addWordToList: function addWordToList(word, pronouncings) {
@@ -23,7 +22,7 @@ module.exports = {
     });
 }
 };
-
+sonus();
 function sonus() {
     var pronunciation;
 
@@ -35,9 +34,9 @@ function sonus() {
             setTimeout(countDown, 1000);
         } else {
             console.log('Go!');
-            record('wav/woo', 3);
+            record('wav/new', 2);
             setTimeout(function () {
-                recognizeWav('wav/woo');
+                recognizeWav('wav/new');
             }, 5000)
         }
     }
@@ -48,7 +47,7 @@ function sonus() {
 
     loadWords();
     addGrammar();
-    pronunciation = recognizer.lookupWord("HELLO");
+    //pronunciation = recognizer.lookupWord("HELLO");
     //console.log(pronunciation);
 
     //console.log('we made it');
@@ -106,6 +105,7 @@ function addGrammar() {
         numStates: 1,
     };
 
+    transitions.push_back({from: 0, to: 0, logp: 0, word: ""});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "WE"});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "MADE"});
     transitions.push_back({from: 0, to: 0, logp: 0, word: "IT"});
@@ -131,6 +131,7 @@ function recognizeWav(fileName) {
         output = recognizer.process(buffer);
         output = recognizer.stop();
         hyp = recognizer.getHyp();
+	console.log('As is what follows:');
         console.log(hyp);
         console.log('done');
         buffer.delete();

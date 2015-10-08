@@ -18,8 +18,9 @@ function start(){
 console.log("\n\nBasic User Interface for testin and demo purposes only");
 console.log("\n\nPlease enter the the number for the operation you would like to run:"+"\n 1.Run Sonus"+"\n 2.Add a new word to the CMU dictionary"+"\n 3.Add a new command"+"\n 4.Exit\n");
 stdin.addListener("data", function(d) {
-	if(d.toString().trim() == 4){process.exit();}
+	if(d.toString().trim() == 4){stdin.removeAllListeners('data');process.exit();}
 	else if(d.toString().trim() == 1){
+		stdin.removeAllListeners('data');
 		s.sonus();
 	}
 	else if(d.toString().trim() == 2){
@@ -35,6 +36,7 @@ stdin.addListener("data", function(d) {
 				else {console.log(word[1]);}
 				s.addWordToList(word[0],word[1]);
 				setTimeout(console.log("Your word has been added"), 1000);
+				stdin.removeAllListeners('data');
 				start();
 			}
 		});
@@ -42,6 +44,7 @@ stdin.addListener("data", function(d) {
 	}
 	else if(d.toString().trim() == 3){console.log("\nFeature coming soon\n");
 			setTimeout(console.log("Please wait"), 1000);
+			stdin.removeAllListeners('data');
 			start();}
   });
 }
