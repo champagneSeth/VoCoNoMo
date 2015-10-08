@@ -11,6 +11,26 @@ module.exports = {
   sonus: function () {
     sonus();
   },
+  addGrammar: function addGrammar(word) {
+    var ids = new PS.Integers();
+    var transitions = new PS.VectorTransitions();
+    var grammar = {
+        start: 0,
+        end: 0,
+        numStates: 1,
+    };
+
+	var i = 0;
+	while(i < word.length ){
+		transitions.push_back({from: 0, to: 0, logp: 0, word: word[i]});
+		i++;
+	}
+
+    console.log(transitions);
+    grammar.transitions = transitions;
+    recognizer.addGrammar(ids, grammar);
+    ids.delete();
+},
   addWordToList: function addWordToList(word, pronouncings) {
     pronouncings.forEach(function (item, i) {
         var wordHolder = word;
@@ -45,7 +65,7 @@ function sonus() {
     cmud.get('it', addWordToList);
 
     loadWords();
-    addGrammar();
+    //addGrammar();
     //pronunciation = recognizer.lookupWord("HELLO");
     //console.log(pronunciation);
 
@@ -104,11 +124,6 @@ function addGrammar() {
         numStates: 1,
     };
 
-    transitions.push_back({from: 0, to: 0, logp: 0, word: ""});
-    transitions.push_back({from: 0, to: 0, logp: 0, word: "WE"});
-    transitions.push_back({from: 0, to: 0, logp: 0, word: "MADE"});
-    transitions.push_back({from: 0, to: 0, logp: 0, word: "IT"});
-
     grammar.transitions = transitions;
     recognizer.addGrammar(ids, grammar);
     ids.delete();
@@ -135,6 +150,7 @@ function recognizeWav(fileName) {
         console.log('done');
         buffer.delete();
         recognizer.delete();
+	process.exit();
     });
 }
 

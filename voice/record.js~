@@ -8,8 +8,8 @@ var fs          = require('fs')
 
 function start() { 
     ps = spawn('sox', ['-t', 'waveaudio', '0', '-p']);
-    ps.stdout.pipe(file);
-    ps.stderr.pipe(info);
+    //ps.stdout.pipe(file);
+    //ps.stderr.pipe(info);
 };
 
 function stop() {
@@ -20,11 +20,11 @@ function stop() {
 };
 
 module.exports = function (fileName, seconds) {
-    file = fs.createWriteStream(fileName + '.wav', { encoding: 'binary' });
+    //file = fs.createWriteStream(fileName + '.wav', { encoding: 'binary' });
     start();
 
     setTimeout(function () {
         stop();
-        file.end();
+        //file.end();
     }, seconds * 1000);
 }

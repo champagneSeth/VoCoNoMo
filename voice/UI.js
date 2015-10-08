@@ -42,9 +42,17 @@ stdin.addListener("data", function(d) {
 		});
 	
 	}
-	else if(d.toString().trim() == 3){console.log("\nFeature coming soon\n");
-			setTimeout(console.log("Please wait"), 1000);
-			stdin.removeAllListeners('data');
-			start();}
+	else if(d.toString().trim() == 3){console.log("\nPlease enter the command you wish to add:\n");
+					stdin.addListener("data", function(d){
+			if(d.toString().trim()){
+				word = d.toString().trim();
+				word = word.split(" ");
+				s.addGrammar(word);
+
+				console.log("\nYour command has been added");
+				stdin.removeAllListeners('data');
+				start();
+			}
+		});}
   });
 }
