@@ -2,7 +2,7 @@
   "name": "sonus",
   "version": "1.0.0",
   "description": "Voice Command Node Module",
-  "main": "index.js",
+  "main": "sonus.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -17,7 +17,7 @@
   },
   "homepage": "https://github.com/champagneSeth/VoCoNoMo#readme",
   "dependencies": {
-    "cmusphinxdict": "0.0.5",
+    "cmusphinxdict": "0.0.6",
     "node-record-lpcm16": "^0.1.4"
   }
 }

@@ -1,6 +1,17 @@
 
+10.20.15
+    - Get grammar working for blackjack
+    - Figure out good scheme for grammar generation
+    - Recompile pocketsphinx.js with blackjack lm and dict
+    - expose recognize endpoints in module
+    - decouple sox recorder from main module
+    Links
+        (lmtool endpoint) http://www.speech.cs.cmu.edu/cgi-bin/tools/lmtool/run
+        (book to read) http://www.amazon.com/Better-Good-Machine-Than-Person/dp/1932558098 
+
 9.13.15
     (3.4 Recognizing audio)
     - Need to get audio buffer
     - web example in audioRecorder.js but look for node package
     - get word recognition working in console
+    
