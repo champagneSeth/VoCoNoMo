@@ -5,10 +5,17 @@ var PS          = require('./lib/pocketsphinx.js')
 ,   recognizer
 ;
 
-sonus();
-module.exports  = sonus;
+//test();
+module.exports  = {
+    sonus       : sonus
+,   recognize   : recognizeBuffer
+}
 
 function sonus() {
+    recognizer = init();
+}
+
+function test() {
 
     var count = 3;
     function countDown() {
@@ -36,16 +43,15 @@ function recognizeWav(fileName) {
     ,   audio   = fs.createReadStream(fileName + '.wav')
     ,   output
     ,   hyp
-    ;   
+    ; 
 
-
-    output  = recognizer.start();
     audio.on('data', function (chunk) {
         for (var i = 0; i < chunk.length; i += 1) {
             buffer.push_back(chunk.readUInt8(i));
         }
 
     }).on('end', function () {
+        output  = recognizer.start();
         output  = recognizer.process(buffer);
         output  = recognizer.stop();
 
@@ -58,4 +64,27 @@ function recognizeWav(fileName) {
     });
 }
 
+function recognizeBuffer(audio) {
+    var buffer  = new PS.AudioBuffer()
+    ,   output
+    ,   hyp
+    ; 
 
+    audio.on('data', function (chunk) {
+        for (var i = 0; i < chunk.length; i += 1) {
+            buffer.push_back(chunk.readUInt8(i));
+        }
+
+    }).on('end', function () {
+        output  = recognizer.start();
+        output  = recognizer.process(buffer);
+        output  = recognizer.stop();
+
+        hyp     = recognizer.getHyp();
+        console.log(hyp);
+        console.log('done');
+        
+        buffer.delete();
+        recognizer.delete();
+    });
+}
