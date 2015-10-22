@@ -5,12 +5,27 @@ var PS          = require('./lib/pocketsphinx.js')
 ,   recognizer
 ;
 
-sonus('hello world');
+sonus();
 module.exports  = sonus;
 
-function sonus(phrase) {
+function sonus() {
 
-    recognizer = init(phrase);
+    var count = 3;
+    function countDown() {
+        console.log(count);
+        count -= 1;
+        if (count > 0) {
+            setTimeout(countDown, 1000);
+        } else {
+            console.log('Go!');
+            record('wav/woo', 3);
+            setTimeout(function () {
+                recognizeWav('wav/woo');
+            }, 4000)
+        }
+    }
+
+    recognizer = init();
 
     console.log('\n\nRecording in...');
     countDown();
@@ -21,25 +36,21 @@ function recognizeWav(fileName) {
     ,   audio   = fs.createReadStream(fileName + '.wav')
     ,   output
     ,   hyp
-    ;
+    ;   
 
+
+    output  = recognizer.start();
     audio.on('data', function (chunk) {
         for (var i = 0; i < chunk.length; i += 1) {
             buffer.push_back(chunk.readUInt8(i));
         }
+
     }).on('end', function () {
-        output  = recognizer.start();
-        console.log(output);
-
         output  = recognizer.process(buffer);
-        console.log(output);
-
         output  = recognizer.stop();
-        console.log(output);
 
         hyp     = recognizer.getHyp();
         console.log(hyp);
-
         console.log('done');
         
         buffer.delete();
@@ -48,17 +59,3 @@ function recognizeWav(fileName) {
 }
 
 
-var count = 3;
-function countDown() {
-    console.log(count);
-    count -= 1;
-    if (count > 0) {
-        setTimeout(countDown, 1000);
-    } else {
-        console.log('Go!');
-        record('wav/woo', 3);
-        setTimeout(function () {
-            recognizeWav('wav/woo');
-        }, 4000)
-    }
-}
