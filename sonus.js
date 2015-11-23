@@ -1,22 +1,19 @@
-var PS          = require('./lib/pocketsphinx.js')
+var PS          = require('./lib/jacksphinx.js')
 ,   record      = require('./lib/record')
-,   init        = require('./lib/recognizer.js')
 ,   fs          = require('fs')
 ,   recognizer
 ;
 
-//test();
+PS = require('./model/dict.js')(PS);
+PS = require('./model/lm.js')(PS);
+
+test();
 module.exports  = {
     sonus       : sonus
 ,   recognize   : recognizeBuffer
 }
 
-function sonus() {
-    recognizer = init();
-}
-
 function test() {
-
     var count = 3;
     function countDown() {
         console.log(count);
@@ -27,8 +24,8 @@ function test() {
             console.log('Go!');
             record('wav/woo', 3);
             setTimeout(function () {
-                recognizeWav('wav/woo');
-            }, 4000)
+                recognizeBuffer(wavToBuffer('wav/woo'));
+            }, 4000);
         }
     }
 
@@ -38,53 +35,73 @@ function test() {
     countDown();
 }
 
-function recognizeWav(fileName) {
-    var buffer  = new PS.AudioBuffer()
-    ,   audio   = fs.createReadStream(fileName + '.wav')
-    ,   output
-    ,   hyp
-    ; 
+function sonus() {
+    recognizer = init();
+}
 
-    audio.on('data', function (chunk) {
-        for (var i = 0; i < chunk.length; i += 1) {
-            buffer.push_back(chunk.readUInt8(i));
-        }
+function init() {
+    var config = new PS.Config();
+    config.push_back(['-fwdflat',   'no']);
+    config.push_back(['-lm',        'jack.lm']);
+    config.push_back(['-dict',      'jack.dic']);
 
-    }).on('end', function () {
-        output  = recognizer.start();
-        output  = recognizer.process(buffer);
-        output  = recognizer.stop();
+    recognizer = new PS.Recognizer(config);
+    config.delete();
 
-        hyp     = recognizer.getHyp();
-        console.log(hyp);
-        console.log('done');
-        
-        buffer.delete();
-        recognizer.delete();
-    });
+    return recognizer;
+}
+
+function end() {
+    recognizer.delete();
+}
+
+function wavToBuffer(fileName) {
+    return fs.createReadStream(fileName + '.wav')
 }
 
 function recognizeBuffer(audio) {
     var buffer  = new PS.AudioBuffer()
+    // ,   segment = new PS.Segmentation()
     ,   output
     ,   hyp
+    ,   count = 0
     ; 
 
+    output = recognizer.start();
+    if (output != PS.ReturnType.SUCCESS) {
+        console.log("Error starting recognizer");
+    }
+
     audio.on('data', function (chunk) {
+        while (buffer.size() < chunk.length) {
+            buffer.push_back(0);
+        }
         for (var i = 0; i < chunk.length; i += 1) {
-            buffer.push_back(chunk.readUInt8(i));
+            buffer.set(i, chunk.readInt16LE(i, true));
+        }
+        output = recognizer.process(buffer);
+        if (output != PS.ReturnType.SUCCESS) {
+            console.log("Error processing buffer");
         }
 
-    }).on('end', function () {
-        output  = recognizer.start();
-        output  = recognizer.process(buffer);
-        output  = recognizer.stop();
-
-        hyp     = recognizer.getHyp();
+        hyp = recognizer.getHyp();
         console.log(hyp);
+        console.log(count++);
+
+    }).on('end', function () {
+
+        output = recognizer.stop();
+        if (output != PS.ReturnType.SUCCESS) {
+            console.log("Error stopping recognizer");
+        }
+
+        hyp = recognizer.getHyp();
+        console.log(hyp);
+
         console.log('done');
         
         buffer.delete();
+        // segment.delete();
         recognizer.delete();
     });
 }

@@ -1,0 +1,35 @@
+Default build process
+
+1.) Download emsdk_portable.tar.gz
+
+2.) ./emsdk update
+
+3.) ./emsdk install latest
+    (takes a long time)
+
+4.) ./emsdk activate latest
+
+5.) source ./emsdk_env.sh
+
+6.) sudo apt-get install cmake
+    sudo apt-get install build-essential
+    sudo apt-get install nodejs
+    sudo apt-get install default-jre
+    sudo apt-get update
+
+7.) cd ./pocketsphinx.js
+    mkdir build
+    cd build
+    
+8.) cmake -DEMSCRIPTEN=1 \
+	-DCMAKE_TOOLCHAIN_FILE=/home/seth/emscripten/cmake/Modules/Platform/Emscripten.cmake \
+	-DICT_BASE=/home/seth/VoCoNoMo/grammar/TAR8347 -DICT_FILES=jack.dic \
+	-LM_BASE=/home/seth/VoCoNoMo/grammar/TAR8347 -LM_FILES=jack.lm ..
+
+9.) sudo make
+
+10.) 
+    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\model\jack.dic --js-output=.\model\dict.js
+    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\model\jack.lm --js-output=.\model\lm.js
+
+
