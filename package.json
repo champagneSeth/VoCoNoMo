@@ -17,7 +17,8 @@
   },
   "homepage": "https://github.com/champagneSeth/VoCoNoMo#readme",
   "dependencies": {
+    "audiodata": "^1.1.0",
     "cmusphinxdict": "0.0.6",
-    "node-record-lpcm16": "^0.1.4"
+    "wav": "^1.0.0"
   }
 }

@@ -1,6 +1,7 @@
 var PS          = require('./lib/jacksphinx.js')
 ,   record      = require('./lib/record')
 ,   fs          = require('fs')
+,   wav         = require('wav')
 ,   recognizer
 ;
 
@@ -14,6 +15,11 @@ module.exports  = {
 }
 
 function test() {
+    recognizer = init();
+    wavToBuffer('wav/commands.wav', recognizeBuffer);
+}
+
+function run() {
     var count = 3;
     function countDown() {
         console.log(count);
@@ -22,10 +28,10 @@ function test() {
             setTimeout(countDown, 1000);
         } else {
             console.log('Go!');
-            record('wav/woo', 3);
-            setTimeout(function () {
-                recognizeBuffer(wavToBuffer('wav/woo'));
-            }, 4000);
+            record('wav/woo', 2000);
+            setTimeout(function() {
+                wavToBuffer('wav/woo.wav', recognizeBuffer);
+            }, 2020);
         }
     }
 
@@ -42,8 +48,10 @@ function sonus() {
 function init() {
     var config = new PS.Config();
     config.push_back(['-fwdflat',   'no']);
+    config.push_back(['-bestpath',  'no']);
     config.push_back(['-lm',        'jack.lm']);
     config.push_back(['-dict',      'jack.dic']);
+    // config.push_back(['-remove_noise', 'yes']);
 
     recognizer = new PS.Recognizer(config);
     config.delete();
@@ -55,24 +63,37 @@ function end() {
     recognizer.delete();
 }
 
-function wavToBuffer(fileName) {
-    return fs.createReadStream(fileName + '.wav')
+function wavToBuffer(fileName, callBack) {
+    console.log(fileName);
+    var file    = fs.createReadStream(fileName)
+    ,   reader  = new wav.Reader()
+    ;
+
+    reader.on('format', function (format) {
+        // the WAVE header is stripped from the output of the reader 
+        console.log(format);
+    });
+
+    callBack(reader);
+    file.pipe(reader);
 }
 
 function recognizeBuffer(audio) {
     var buffer  = new PS.AudioBuffer()
-    // ,   segment = new PS.Segmentation()
+    ,   segment = new PS.Segmentation()
+    ,   count   = 0
     ,   output
     ,   hyp
-    ,   count = 0
     ; 
 
     output = recognizer.start();
     if (output != PS.ReturnType.SUCCESS) {
-        console.log("Error starting recognizer");
+        console.log('Error starting recognizer');
     }
 
-    audio.on('data', function (chunk) {
+    audio.on('data', function(chunk) {
+        console.log(chunk);
+
         while (buffer.size() < chunk.length) {
             buffer.push_back(0);
         }
@@ -81,27 +102,43 @@ function recognizeBuffer(audio) {
         }
         output = recognizer.process(buffer);
         if (output != PS.ReturnType.SUCCESS) {
-            console.log("Error processing buffer");
+            console.log('Error processing buffer');
         }
 
         hyp = recognizer.getHyp();
         console.log(hyp);
         console.log(count++);
 
-    }).on('end', function () {
+        if (recognizer.getHypseg(segment) == PS.ReturnType.SUCCESS) {
+            for (var i = 0 ; i < segment.size(); i++) {
+                var segItem = segment.get(i);
+                console.log('Word ' + segItem.word + ' starts at frame ' + segItem.start + ' ends at frame ' + segItem.end);
+            }
+        }
 
+    }).on('end', function() {
         output = recognizer.stop();
         if (output != PS.ReturnType.SUCCESS) {
-            console.log("Error stopping recognizer");
+            console.log('Error stopping recognizer');
         }
 
         hyp = recognizer.getHyp();
         console.log(hyp);
 
+
+        if (recognizer.getHypseg(segment) == PS.ReturnType.SUCCESS) {
+            for (var i = 0 ; i < segment.size(); i++) {
+                var segItem = segment.get(i);
+                console.log('Word ' + segItem.word + ' starts at frame ' + segItem.start + ' ends at frame ' + segItem.end);
+            }
+        }
+
         console.log('done');
         
         buffer.delete();
-        // segment.delete();
+        segment.delete();
         recognizer.delete();
+
+        return hyp;
     });
 }

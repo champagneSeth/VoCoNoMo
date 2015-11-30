@@ -29,7 +29,7 @@ Default build process
 9.) sudo make
 
 10.) 
-    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\model\jack.dic --js-output=.\model\dict.js
-    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\model\jack.lm --js-output=.\model\lm.js
+    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\jack.dic --js-output=.\dict.js
+    python 'C:\Program Files\Emscripten\emscripten\1.34.1\tools\file_packager.py' .\lib\jacksphinx.js --embed .\jack.lm --js-output=.\lm.js
 
 
